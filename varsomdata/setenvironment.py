@@ -30,8 +30,8 @@ if sys.platform == 'darwin':
 
     
 elif sys.platform == 'win32':
-
-    root_folder = 'C:\\Users\\raek\\github\\varsomdata\\varsomdata\\'
+    # TODO: replace by os.path.join() in methods that combine these paths
+    root_folder = 'C:\\Users\\kmu\\GitHub\\varsomdata\\varsomdata\\'
     data_folder = root_folder + 'datafiles\\'
     plot_folder = root_folder + 'plots\\'
     kdv_elements_folder = root_folder + 'localstorage\\'
@@ -39,7 +39,7 @@ elif sys.platform == 'win32':
     local_storage = root_folder + 'localstorage\\'
     output_folder = root_folder + 'output\\'
 
-    web_root_folder = 'C:\\Users\\raek\\github\\BottleSite\\'
+    web_root_folder = 'C:\\Users\\kmu\\GitHub\\varsom_tmp\\web\\'
     web_images_folder = web_root_folder + 'images\\'
     web_view_folder = web_root_folder + 'views\\'
 

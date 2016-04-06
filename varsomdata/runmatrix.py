@@ -713,9 +713,9 @@ if __name__ == "__main__":
     ######################################################################################
     ####### With something pickled you don't need to read on the api all the time ########
     #
-    # pickle_warnings(regions, date_from, date_to, pickle_warnings_file_name)
-    # warnings = mp.unpickle_anything(pickle_warnings_file_name)
-    # pickle_data_set(warnings, pickle_data_set_file_name, use_ikke_gitt=False)
+    pickle_warnings(regions, date_from, date_to, pickle_warnings_file_name)
+    warnings = mp.unpickle_anything(pickle_warnings_file_name)
+    pickle_data_set(warnings, pickle_data_set_file_name, use_ikke_gitt=False)
     data_set = mp.unpickle_anything(pickle_data_set_file_name)
     #
     ######################################################################################
