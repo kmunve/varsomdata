@@ -29,7 +29,8 @@ def pickle_warnings(regions, date_from, date_to, pickle_file_name):
         # get all warning and problems for this region and then loop though them joining them where dates match.
         region_warnings = gfa.get_warnings(r, date_from, date_to)
         name = gro.get_forecast_region_name(r)
-        problems = gro.get_problems_from_AvalancheWarnProblemV(name, r, date_from, date_to)
+        # problems = gro.get_problems_from_AvalancheWarnProblemV(name, r, date_from, date_to)
+        problems = gro.get_problems_from_AvalancheWarnProblemV(r, date_from, date_to)
 
         print 'runmatrix.py -> pickle_warnings: {0} problems found for {1}'.format(len(problems), name)
 
@@ -71,6 +72,7 @@ def pickle_data_set(warnings, file_name, use_ikke_gitt=False):
     for w in warnings:
         if w.danger_level > 0 and len(w.avalanche_problems) > 0:
             # The first problem in avalanche_problems is used. This is the main problem.
+            # if w.avalanche_problems[0].cause_tid != 24: # disregards loose snow avalanches
             level_list.append(w.danger_level)
             size_list.append(w.avalanche_problems[0].aval_size)
             trigger_list.append(w.avalanche_problems[0].aval_trigger)
@@ -698,8 +700,8 @@ if __name__ == "__main__":
 
     # regions_kdv = gkdv.get_kdv("ForecastRegionKDV")
     regions = list(range(106, 134))     # ForecastRegionTID = 133 is the last and is Salten
-    date_from = "2014-12-01"
-    date_to = "2015-06-01"
+    date_from = "2015-12-01"
+    date_to = "2016-04-05"
     pickle_warnings_file_name = '{0}{1}'.format(env.local_storage, 'runForMatrix warnings.pickle')
     pickle_data_set_file_name = '{0}{1}'.format(env.local_storage, 'runForMatrix data set.pickle')
 
@@ -713,7 +715,7 @@ if __name__ == "__main__":
     ######################################################################################
     ####### With something pickled you don't need to read on the api all the time ########
     #
-    pickle_warnings(regions, date_from, date_to, pickle_warnings_file_name)
+    # pickle_warnings(regions, date_from, date_to, pickle_warnings_file_name)
     warnings = mp.unpickle_anything(pickle_warnings_file_name)
     pickle_data_set(warnings, pickle_data_set_file_name, use_ikke_gitt=False)
     data_set = mp.unpickle_anything(pickle_data_set_file_name)
