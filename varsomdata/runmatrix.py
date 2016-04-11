@@ -89,19 +89,24 @@ def pickle_data_set(warnings, file_name, use_ikke_gitt=False):
             #if w.avalanche_problems[0].cause_tid != 24: # disregards loose snow avalanches
             print(w.avalanche_problems[0].main_cause)
             if w.avalanche_problems[0].main_cause == 'Nysnoe': # select a specific main problem
+                new_count += 1
+            elif w.avalanche_problems[0].main_cause == 'Fokksnoe':
+                wind_count += 1
+
+
+            elif w.avalanche_problems[0].main_cause == 'Vaat snoe':
+                wet_count += 1
+
+
                 level_list.append(w.danger_level)
                 size_list.append(w.avalanche_problems[0].aval_size)
                 trigger_list.append(w.avalanche_problems[0].aval_trigger)
                 probability_list.append(w.avalanche_problems[0].aval_probability)
                 distribution_list.append(w.avalanche_problems[0].aval_distribution)
 
-                new_count += 1
-            elif  w.avalanche_problems[0].main_cause == 'Fokksnoe':
-                wind_count += 1
-            elif  w.avalanche_problems[0].main_cause == 'Vaat snoe':
-                wet_count += 1
-            elif  w.avalanche_problems[0].main_cause == 'Vedvarende svakt lag':
+            elif w.avalanche_problems[0].main_cause == 'Vedvarende svakt lag':
                 pwl_count += 1
+
 
         print("New: {0}\nWind: {1}\nWet: {2}\nPWL: {3}\n".format(new_count, wind_count, wet_count, pwl_count))
 
@@ -726,9 +731,9 @@ if __name__ == "__main__":
 
     # regions_kdv = gkdv.get_kdv("ForecastRegionKDV")
     regions = list(range(106, 134))     # ForecastRegionTID = 133 is the last and is Salten
-    date_from = "2015-12-01"
-    date_to = "2016-04-10"
-    filter_ext = "new snow"
+    date_from = "2014-12-01"
+    date_to = "2015-05-31"
+    filter_ext = "wet"
     season_marker = "{0}{1}".format(date_from[2:4], date_to[2:4])
 
     pickle_warnings_file_name = '{0}{1}'.format(env.local_storage, 'runForMatrix warnings {0}.pickle'.format(season_marker))
