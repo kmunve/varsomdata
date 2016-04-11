@@ -69,20 +69,46 @@ def pickle_data_set(warnings, file_name, use_ikke_gitt=False):
     probability_list = []
     distribution_list = []
 
+
+    """
+    'Nysnoe'
+    'Fokksnoe'
+    'Vedvarende svakt lag'
+    'Vaat snoe'
+    """
+
+    wet_count = 0
+    wind_count = 0
+    new_count = 0
+    pwl_count = 0
+
     for w in warnings:
         if w.danger_level > 0 and len(w.avalanche_problems) > 0:
             # The first problem in avalanche_problems is used. This is the main problem.
-            # if w.avalanche_problems[0].cause_tid != 24: # disregards loose snow avalanches
-            level_list.append(w.danger_level)
-            size_list.append(w.avalanche_problems[0].aval_size)
-            trigger_list.append(w.avalanche_problems[0].aval_trigger)
-            probability_list.append(w.avalanche_problems[0].aval_probability)
-            distribution_list.append(w.avalanche_problems[0].aval_distribution)
+            # TODO: Add filters for wet slabs and wet loose
+            #if w.avalanche_problems[0].cause_tid != 24: # disregards loose snow avalanches
+            print(w.avalanche_problems[0].main_cause)
+            if w.avalanche_problems[0].main_cause == 'Nysnoe': # select a specific main problem
+                level_list.append(w.danger_level)
+                size_list.append(w.avalanche_problems[0].aval_size)
+                trigger_list.append(w.avalanche_problems[0].aval_trigger)
+                probability_list.append(w.avalanche_problems[0].aval_probability)
+                distribution_list.append(w.avalanche_problems[0].aval_distribution)
+
+                new_count += 1
+            elif  w.avalanche_problems[0].main_cause == 'Fokksnoe':
+                wind_count += 1
+            elif  w.avalanche_problems[0].main_cause == 'Vaat snoe':
+                wet_count += 1
+            elif  w.avalanche_problems[0].main_cause == 'Vedvarende svakt lag':
+                pwl_count += 1
+
+        print("New: {0}\nWind: {1}\nWet: {2}\nPWL: {3}\n".format(new_count, wind_count, wet_count, pwl_count))
 
         # Test is lengths match and give warning if not.
         control = (len(level_list) + len(size_list) + len(trigger_list) + len(probability_list) + len(distribution_list))/5
         if not control == len(level_list):
-            print("runForMatrix -> pickle_data_set: list-lenghts dont match. Error in data.")
+            print("runForMatrix -> pickle_data_set: list-lengths do not match. Error in data.")
 
     level_keys = gkdv.get_kdv('AvalancheDangerKDV').keys()
     size_keys = [v.Name for v in gkdv.get_kdv('DestructiveSizeKDV').values()]
@@ -701,15 +727,18 @@ if __name__ == "__main__":
     # regions_kdv = gkdv.get_kdv("ForecastRegionKDV")
     regions = list(range(106, 134))     # ForecastRegionTID = 133 is the last and is Salten
     date_from = "2015-12-01"
-    date_to = "2016-04-05"
-    pickle_warnings_file_name = '{0}{1}'.format(env.local_storage, 'runForMatrix warnings.pickle')
-    pickle_data_set_file_name = '{0}{1}'.format(env.local_storage, 'runForMatrix data set.pickle')
+    date_to = "2016-04-10"
+    filter_ext = "new snow"
+    season_marker = "{0}{1}".format(date_from[2:4], date_to[2:4])
 
-    pickle_m3_file_name = '{0}{1}'.format(env.local_storage, 'runForMatix m3.pickle')
-    plot_m3_file_name = '{0}m3 {1}-{2}'.format(env.plot_folder, date_from[0:4], date_to[2:4])
+    pickle_warnings_file_name = '{0}{1}'.format(env.local_storage, 'runForMatrix warnings {0}.pickle'.format(season_marker))
+    pickle_data_set_file_name = '{0}{1}'.format(env.local_storage, 'runForMatrix data set {0}.pickle'.format(season_marker))
 
-    pickle_m3_v2_file_name = '{0}{1}'.format(env.local_storage, 'runForMatix m3.v2.pickle')
-    plot_m3_v2_file_name = '{0}m3 {1}-{2}.v2'.format(env.plot_folder, date_from[0:4], date_to[2:4])
+    pickle_m3_file_name = '{0}{1}'.format(env.local_storage, 'runForMatix m3 {0}.pickle'.format(season_marker))
+    plot_m3_file_name = '{0}m3 {1}-{2}'.format(env.plot_folder, season_marker, filter_ext)
+
+    pickle_m3_v2_file_name = '{0}{1}'.format(env.local_storage, 'runForMatix m3.v2 {0}.pickle'.format(season_marker))
+    plot_m3_v2_file_name = '{0}m3 {1}-{2}.v2'.format(env.plot_folder, season_marker, filter_ext)
 
 
     ######################################################################################
@@ -721,7 +750,6 @@ if __name__ == "__main__":
     data_set = mp.unpickle_anything(pickle_data_set_file_name)
     #
     ######################################################################################
-
 
     # plot_all_histograms(data_set, date_from, date_to, warnings)
 
@@ -735,4 +763,3 @@ if __name__ == "__main__":
 
 
     a = 1
-
