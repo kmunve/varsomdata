@@ -69,7 +69,6 @@ def pickle_data_set(warnings, file_name, use_ikke_gitt=False):
     probability_list = []
     distribution_list = []
 
-
     """
     'Nysnoe'
     'Fokksnoe'
@@ -84,14 +83,15 @@ def pickle_data_set(warnings, file_name, use_ikke_gitt=False):
 
     for w in warnings:
         if w.danger_level > 0 and len(w.avalanche_problems) > 0:
-            # The first problem in avalanche_problems is used. This is the main problem.
-            # TODO: Add filters for wet slabs and wet loose
-            if w.avalanche_problems[0].cause_tid == 24: # disregards loose snow avalanches
-                level_list.append(w.danger_level)
-                size_list.append(w.avalanche_problems[0].aval_size)
-                trigger_list.append(w.avalanche_problems[0].aval_trigger)
-                probability_list.append(w.avalanche_problems[0].aval_probability)
-                distribution_list.append(w.avalanche_problems[0].aval_distribution)
+        # if w.danger_level > 0 and len(w.avalanche_problems) == 2:
+        #     # The first problem in avalanche_problems is used. This is the main problem.
+        #     # TODO: Add filters for wet slabs and wet loose
+        #     if w.avalanche_problems[1].cause_tid in [11, 13, 16, 17, 18, 19]: # PWLs only
+            level_list.append(w.danger_level)
+            size_list.append(w.avalanche_problems[0].aval_size)
+            trigger_list.append(w.avalanche_problems[0].aval_trigger)
+            probability_list.append(w.avalanche_problems[0].aval_probability)
+            distribution_list.append(w.avalanche_problems[0].aval_distribution)
 
             '''
             if w.avalanche_problems[0].main_cause == 'Nysnoe': # select a specific main problem
@@ -731,8 +731,8 @@ if __name__ == "__main__":
     # regions_kdv = gkdv.get_kdv("ForecastRegionKDV")
     regions = list(range(106, 134))     # ForecastRegionTID = 133 is the last and is Salten
     date_from = "2015-12-01"
-    date_to = "2016-04-10"
-    filter_ext = "loose snow"
+    date_to = "2016-06-01"
+    filter_ext = ""
     season_marker = "{0}{1}".format(date_from[2:4], date_to[2:4])
 
     pickle_warnings_file_name = '{0}{1}'.format(env.local_storage, 'runForMatrix warnings {0}.pickle'.format(season_marker))
@@ -748,7 +748,7 @@ if __name__ == "__main__":
     ######################################################################################
     ####### With something pickled you don't need to read on the api all the time ########
     #
-    # pickle_warnings(regions, date_from, date_to, pickle_warnings_file_name)
+    pickle_warnings(regions, date_from, date_to, pickle_warnings_file_name)
     warnings = mp.unpickle_anything(pickle_warnings_file_name)
     pickle_data_set(warnings, pickle_data_set_file_name, use_ikke_gitt=False)
     data_set = mp.unpickle_anything(pickle_data_set_file_name)

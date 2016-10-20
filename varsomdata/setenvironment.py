@@ -31,7 +31,7 @@ if sys.platform == 'darwin':
     
 elif sys.platform == 'win32':
     # TODO: replace by os.path.join() in methods that combine these paths
-    root_folder = 'C:\\Users\\kmu\\GitHub\\varsomdata\\varsomdata\\'
+    root_folder = 'D:\\Dev\\varsomdata\\varsomdata\\'
     data_folder = root_folder + 'datafiles\\'
     plot_folder = root_folder + 'plots\\'
     kdv_elements_folder = root_folder + 'localstorage\\'
